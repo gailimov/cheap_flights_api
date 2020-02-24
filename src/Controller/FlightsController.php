@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FlightsController
 {
+    use ControllerTrait;
+
     private FlightRepository $flightRepository;
 
     public function __construct(FlightRepository $flightRepository)
@@ -26,21 +28,11 @@ class FlightsController
         $dateTo = $request->query->get('date_to');
 
         if (!$flyFrom || !$flyTo || !$dateFrom || !$dateTo) {
-            return new JsonResponse(
-                [
-                    'message' => 'Required parameters not specified'
-                ],
-                400
-            );
+            return $this->errorResponse(400, 'Required parameters not specified');
         }
 
         if (!$this->isDateValid($dateTo) || !$this->isDateValid($dateTo)) {
-            return new JsonResponse(
-                [
-                    'message' => 'Invalid date'
-                ],
-                400
-            );
+            return $this->errorResponse(400, 'Invalid date');
         }
 
         $flights = $this->flightRepository->getByDates($flyFrom, $flyTo, $dateFrom, $dateTo);

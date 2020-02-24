@@ -4,7 +4,7 @@
 $ docker-compose up -d
 ```
 
-Then run the flights caching service
+Then run the [flights caching service](https://github.com/gailimov/cheap_flights_cacher)
 
 ## API
 

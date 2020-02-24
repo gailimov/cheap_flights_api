@@ -3,7 +3,32 @@ version: "3.5"
 services:
   api:
     build: .
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - api
     ports:
       - 80:8080
     volumes:
       - .:/app
+
+  postgres:
+    image: postgres:12.2-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - api
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  api:
+    name: cheap_flights_api
+
+volumes:
+  postgres_data:

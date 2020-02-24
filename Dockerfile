@@ -1,5 +1,10 @@
 FROM php:7.4.3-alpine3.11
 
+RUN apk add -U \
+        postgresql-dev \
+    && docker-php-ext-install \
+        pdo_pgsql
+
 ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY --from=composer:1.9.3 /usr/bin/composer /usr/bin/composer
 

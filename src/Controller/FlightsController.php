@@ -25,7 +25,7 @@ class FlightsController
         $dateFrom = $request->query->get('date_from');
         $dateTo = $request->query->get('date_to');
 
-        if (!$flyFrom && !$flyTo && !$dateFrom && !$dateTo) {
+        if (!$flyFrom || !$flyTo || !$dateFrom || !$dateTo) {
             return new JsonResponse(
                 [
                     'message' => 'Required parameters not specified'
@@ -34,8 +34,22 @@ class FlightsController
             );
         }
 
+        if (!$this->isDateValid($dateTo) || !$this->isDateValid($dateTo)) {
+            return new JsonResponse(
+                [
+                    'message' => 'Invalid date'
+                ],
+                400
+            );
+        }
+
         $flights = $this->flightRepository->getByDates($flyFrom, $flyTo, $dateFrom, $dateTo);
 
         return new JsonResponse($flights);
+    }
+
+    private function isDateValid(string $date): bool
+    {
+        return (bool) \DateTime::createFromFormat('d/m/Y', $date);
     }
 }
